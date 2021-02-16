@@ -15,6 +15,7 @@ import Signup from "./pages/Signup"
 import Login from "./pages/Login"
 import IsAuth from "./components/IsAuth"
 import Profile from "./pages/Profile"
+import Home from "./pages/Home"
 
 const httpLink = new HttpLink({ uri: "http://localhost:4000" })
 const authLink = setContext(async (req, { headers }) => {
@@ -40,7 +41,7 @@ function App() {
       <div>
         <Router>
           <Switch>
-            <Route exact path="/">
+            <Route exact path="/landing">
               <Landing />
             </Route>
             <Route path="/signup">
@@ -50,8 +51,8 @@ function App() {
               <Login />
             </Route>
             <IsAuth>
-              <Route path="/users">
-                <Users />
+              <Route exact path="/">
+                <Home />
               </Route>
               <Route path="/profile">
                 <Profile />

@@ -1,6 +1,6 @@
 import { gql, useMutation, useQuery } from "@apollo/client"
 import { ErrorMessage, Field, Form, Formik } from "formik"
-import React, { useState } from "react"
+import React, { useRef, useState } from "react"
 import { ME_QUERY } from "../pages/Profile"
 import Modal from "react-modal"
 import { customStyles } from "../styles/CustomModalStyles"
@@ -34,6 +34,10 @@ interface ProfileValues {
 }
 
 function UpdateProfile() {
+  const inputFile = useRef<HTMLInputElement | null>(null)
+  const [image, setImage] = useState("")
+  const [imageLoading, setImageLoading] = useState(false)
+
   const { loading, error, data } = useQuery(ME_QUERY)
   const [updateProfile] = useMutation(UPDATE_PROFILE_MUTATION, {
     refetchQueries: [{ query: ME_QUERY }],
@@ -59,23 +63,75 @@ function UpdateProfile() {
     setModalOpen(false)
   }
 
+  const uploadImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files
+    const data = new FormData()
+    data.append("file", files![0])
+    data.append("upload_preset", "spitter")
+    setImageLoading(true)
+    const res = await fetch(process.env.REACT_APP_CLOUDINARY_ENDPOINT!, {
+      method: "POST",
+      body: data,
+    })
+
+    const file = await res.json()
+    setImage(file.secure_url)
+    setImageLoading(false)
+  }
+
   return (
     <div>
-      <button onClick={openModal}>Edit Profile</button>
+      <button onClick={openModal} className="edit-button">
+        Edit Profile
+      </button>
 
       <Modal
         isOpen={modalOpen}
         onRequestClose={closeModal}
         contentLabel="Modal"
         style={customStyles}
+        appElement={document.getElementById("app") as HTMLElement}
       >
+        <input
+          type="file"
+          name="file"
+          placeholder="upload profile image"
+          onChange={uploadImage}
+          ref={inputFile}
+          style={{ display: "none" }}
+        />
+
+        {imageLoading ? (
+          <h3>Loading...</h3>
+        ) : (
+          <>
+            {image ? (
+              <span>
+                <img
+                  src={!image ? data.me.Profile.avatar : image}
+                  style={{ width: "150px", borderRadius: "50%" }}
+                  alt="avatar"
+                  onClick={() => inputFile.current?.click()}
+                />
+              </span>
+            ) : (
+              <span>
+                <i
+                  className="fa fa-user fa-5x"
+                  aria-hidden="true"
+                  onClick={() => inputFile.current?.click()}
+                ></i>
+              </span>
+            )}
+          </>
+        )}
         <Formik
           initialValues={initialValues}
           // validationSchema={validationSchema}
           onSubmit={async (values, { setSubmitting }) => {
             setSubmitting(true)
             await updateProfile({
-              variables: values,
+              variables: { ...values, avatar: image },
             })
 
             setSubmitting(false)

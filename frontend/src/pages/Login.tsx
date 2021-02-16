@@ -57,7 +57,7 @@ function Login() {
           })
           localStorage.setItem("token", res.data.login.token)
           setSubmitting(false)
-          history.push("/users")
+          history.push("/profile")
         }}
       >
         <Form>
