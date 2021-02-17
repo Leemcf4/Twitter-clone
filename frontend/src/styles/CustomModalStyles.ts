@@ -11,6 +11,7 @@ export const customStyles = {
     maxWidth: "40em",
     minWidth: "30em",
     minHeight: "10em",
+    overflow: "hidden",
   },
   overlay: {
     background: "#9e9e9e69",

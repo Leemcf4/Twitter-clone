@@ -68,7 +68,7 @@ function Signup() {
           })
           localStorage.setItem("token", res.data.signup.token)
           setSubmitting(false)
-          history.push("/users")
+          history.push("/")
         }}
       >
         <Form>

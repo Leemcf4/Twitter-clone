@@ -6,16 +6,35 @@ import UpdateProfile from "../components/UpdateProfile"
 import "../styles/profile.css"
 import "../styles/primary.css"
 import LeftNav from "../components/LeftNav"
+import TrendingTweets from "../components/TrendingTweets"
+import LikedTweets from "../components/LikedTweets"
+import Following from "../components/Following"
 
 export const ME_QUERY = gql`
   query me {
     me {
       id
       name
+      Following {
+        id
+        followId
+        name
+        avatar
+      }
       likedTweet {
         id
         tweet {
           id
+          content
+          createdAt
+          author {
+            id
+            name
+            Profile {
+              id
+              avatar
+            }
+          }
         }
       }
       Profile {
@@ -81,13 +100,15 @@ function Profile() {
               </p>
             ) : null}
             <div className="followers">
-              {/* <Following/> */} <p>420 following</p>
+              <Following />
               <p>384 followers</p>
             </div>
           </div>
-          {/* <LikedTweets tweets={data.me} /> */}
+          <LikedTweets tweets={data.me} />
         </div>
-        <div className="right">{/* <PopularTweets/> */}</div>
+        <div className="right">
+          <TrendingTweets />{" "}
+        </div>
       </div>
     </>
   )

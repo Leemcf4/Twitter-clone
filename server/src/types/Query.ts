@@ -32,5 +32,29 @@ export const Query = queryType({
         })
       },
     })
+
+    t.nullable.field('tweet', {
+      type: 'Tweet',
+      args: { id: intArg() },
+      resolve: (parent, { id }, ctx) => {
+        return ctx.prisma.tweet.findUnique({
+          where: {
+            id: Number(id),
+          },
+        })
+      },
+    })
+
+    t.nullable.field('user', {
+      type: 'User',
+      args: { id: intArg() },
+      resolve: (parent, { id }, ctx) => {
+        return ctx.prisma.user.findUnique({
+          where: {
+            id: Number(id),
+          },
+        })
+      },
+    })
   },
 })

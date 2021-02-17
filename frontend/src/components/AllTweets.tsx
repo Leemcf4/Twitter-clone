@@ -6,6 +6,8 @@ import "../styles/allTweets.css"
 import { ME_QUERY } from "../pages/Profile"
 import LikeTweet from "./LikeTweet"
 import DeleteLike from "./DeleteLike"
+import CreateComment from "./CreateComment"
+import { Link } from "react-router-dom"
 
 export const TWEETS_QUERY = gql`
   query TWEETS_QUERY {
@@ -14,6 +16,9 @@ export const TWEETS_QUERY = gql`
       createdAt
       content
       likes {
+        id
+      }
+      comments {
         id
       }
       author {
@@ -44,7 +49,9 @@ function AllTweets() {
     content: string
     createdAt: Date
     likes: []
+    comments: []
     author: {
+      id: any
       name: string
       Profile: {
         avatar: string
@@ -64,26 +71,39 @@ function AllTweets() {
     <div>
       {data.tweets.map((tweet: AllTweets) => (
         <div key={tweet.id} className="tweet-container">
-          <div className="tweet-header">
-            <img
-              src={tweet.author.Profile.avatar}
-              alt="avatar"
-              style={{
-                width: "40px",
-                borderRadius: "50%",
-                objectFit: "contain",
-              }}
-            />
-            <h4 className="name">{tweet.author.name}</h4>
-            <p className="date-time">
-              {formatDistance(
-                subDays(new Date(tweet.createdAt), 0),
-                new Date()
-              )}{" "}
-              ago
-            </p>
-          </div>
-          <p>{tweet.content}</p>
+          <Link to={`tweet/${tweet.id}`}>
+            <div className="tweet-header">
+              {tweet.author.Profile.avatar ? (
+                <img
+                  src={tweet.author.Profile.avatar}
+                  style={{ width: "50px", borderRadius: "50%" }}
+                  alt="avatar"
+                />
+              ) : (
+                <i className="fa fa-user fa-2x" aria-hidden="true"></i>
+              )}
+              {/* <img
+                src={tweet?.author?.Profile?.avatar}
+                alt="avatar"
+                style={{
+                  width: "40px",
+                  borderRadius: "50%",
+                  objectFit: "contain",
+                }} 
+              />*/}
+              <Link to={`/user/${tweet.author.id}`}>
+                <h4 className="name">{tweet.author.name}</h4>
+              </Link>
+              <p className="date-time">
+                {formatDistance(
+                  subDays(new Date(tweet.createdAt), 0),
+                  new Date()
+                )}{" "}
+                ago
+              </p>
+            </div>
+            <p>{tweet.content}</p>
+          </Link>
           <div className="likes">
             {meData.me.likedTweet
               .map((t: LikedTweets) => t.tweet.id)
@@ -104,6 +124,16 @@ function AllTweets() {
                 {tweet.likes.length}
               </span>
             )}
+
+            <span style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
+              <CreateComment
+                avatar={tweet?.author?.Profile?.avatar}
+                name={tweet.author.name}
+                tweet={tweet.content}
+                id={tweet.id}
+              />
+              {tweet.comments.length > 0 ? tweet.comments.length : null}
+            </span>
           </div>
         </div>
       ))}

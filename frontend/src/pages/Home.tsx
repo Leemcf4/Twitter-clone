@@ -1,11 +1,12 @@
 import { gql, useQuery } from "@apollo/client"
 import React from "react"
-import { Link, useHistory } from "react-router-dom"
+import { useHistory } from "react-router-dom"
 import "../styles/home.css"
 import "../styles/primary.css"
 import LeftNav from "../components/LeftNav"
 import AllTweets from "../components/AllTweets"
 import HomePageTweet from "../components/HomePageTweet"
+import TrendingTweets from "../components/TrendingTweets"
 
 export const ME_QUERY = gql`
   query me {
@@ -44,7 +45,10 @@ function Home() {
 
           <AllTweets />
         </div>
-        <div className="right">{/* <PopularTweets/> */}</div>
+        <div className="right">
+          {" "}
+          <TrendingTweets />{" "}
+        </div>
       </div>
     </>
   )

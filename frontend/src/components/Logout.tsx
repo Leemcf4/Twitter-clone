@@ -23,18 +23,23 @@ function Logout() {
   }
   const handleLogout = async () => {
     localStorage.removeItem("token")
-    history.push("/")
+    history.push("/landing")
   }
 
   return (
     <div className="logout">
       <span onClick={openModal} style={{ flex: 1, flexDirection: "row" }}>
         <h4>
-          <img
-            src={data.me.Profile?.avatar}
-            style={{ width: "40px", borderRadius: "50%" }}
-            alt="avatar"
-          />
+          {data.me.Profile?.avatar ? (
+            <img
+              src={data.me.Profile.avatar}
+              style={{ width: "40px", borderRadius: "50%" }}
+              alt="avatar"
+            />
+          ) : (
+            <i className="fa fa-user fa-2x" aria-hidden="true"></i>
+          )}
+
           <span style={{ marginLeft: "10px", marginTop: "-10px" }}>
             {data.me.name}
           </span>

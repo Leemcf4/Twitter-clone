@@ -16,6 +16,8 @@ import Login from "./pages/Login"
 import IsAuth from "./components/IsAuth"
 import Profile from "./pages/Profile"
 import Home from "./pages/Home"
+import SingleTweet from "./pages/SingleTweet"
+import SingleUser from "./pages/SingleUser"
 
 const httpLink = new HttpLink({ uri: "http://localhost:4000" })
 const authLink = setContext(async (req, { headers }) => {
@@ -56,6 +58,12 @@ function App() {
               </Route>
               <Route path="/profile">
                 <Profile />
+              </Route>
+              <Route path="/tweet/:id">
+                <SingleTweet />
+              </Route>
+              <Route path="/user/:id">
+                <SingleUser />
               </Route>
             </IsAuth>
           </Switch>
